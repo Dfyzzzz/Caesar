@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class Runner {
     public static void main(String[] args) {
         System.out.println("""
@@ -31,10 +33,12 @@ public class Runner {
                 //реализация первого пункта меню
                 if(command.isEmpty()) {
                     Encoding.firstItem();
+                    return;
                 }
                 //реализация второго пункта меню
                 else if(command.equals("1")){
                     System.out.println("Введите свой текст\n");
+                    return;
                 }
 
             }
