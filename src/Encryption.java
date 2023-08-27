@@ -1,41 +1,43 @@
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 
-public class Encoding {
+public class Encryption {
     public static String allSymbolsStr = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя.,”:-!? ";
     public static char[] allSymbolsChar = allSymbolsStr.toCharArray();
-   static int lengthAlphabet = allSymbolsChar.length;
-    public static String firstItem(){
+    static int lengthAlphabet = allSymbolsChar.length;
+    static boolean encryptionDone = false;
+
+    public static void encryption(String way) {
         //Ввод ключа безопасности
         System.out.println("Введите число - ключ безопасности");
         int keyInt = 0;
         int count = 3;
-        while(count>0){
-            try{
+        while (count > 0) {
+            try {
                 keyInt = Integer.parseInt(Actions.readLine());
                 break;
-            }catch (NumberFormatException e){
+            } catch (NumberFormatException e) {
                 count--;
-                if(count>0) System.out.println("Ключ безопасности должен быть только числом до 2_147_483_647\nПожалуйста, введите число");
+                if (count > 0)
+                    System.out.println("Ключ безопасности должен быть только числом от -2_147_483_648 до 2_147_483_647\n" +
+                            "Пожалуйста, введите число");
                 else System.out.println("Попробуйте в другой раз");
             }
         }
         //Редактирование ключа безопасности в пределах lengthAlphabet
-        if(keyInt >= 0) keyInt %= lengthAlphabet;
-        else keyInt = lengthAlphabet + keyInt%lengthAlphabet;
+        if (keyInt >= 0) keyInt %= lengthAlphabet;
+        else keyInt = lengthAlphabet + keyInt % lengthAlphabet;
 
-         //Чтение файла, преобразование в массив символов
-        String encodingString;
+        //Чтение файла, преобразование в массив символов
+        String encryptedString;
         try {
-            encodingString = Files.readString(Path.of("src/Text.txt"));
+            encryptedString = Files.readString(Path.of(way));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        char[] allChar = encodingString.toCharArray();
+        char[] allChar = encryptedString.toCharArray();
 
         //шифрование текста
         for (int i = 0; i < allChar.length; i++) {
@@ -43,8 +45,9 @@ public class Encoding {
 
                 int index = allSymbolsStr.indexOf(allChar[i]);
 
-                if((index+keyInt)>=lengthAlphabet) index -= 74;
-                allChar[i] = allSymbolsChar[index+keyInt];
+                if ((index + keyInt) >= lengthAlphabet) index -= lengthAlphabet;
+
+                allChar[i] = allSymbolsChar[index + keyInt];
             }
         }
 
@@ -55,16 +58,6 @@ public class Encoding {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        return "Текст зашифрован и записан в файл";
+        System.out.println("Файл записан в папку \"CaesarEncryptionAndDecryption\"");
     }
-
-
-
-
-
-
-
-
-
 }
