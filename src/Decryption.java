@@ -4,36 +4,16 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class Decryption {
-    public static void decryption() {
-        //Ввод ключа безопасности
-        System.out.println("Введите число - ключ безопасности");
-        int keyInt = 0;
-        int count = 3;
-        while (count > 0) {
-            try {
-                keyInt = Integer.parseInt(Actions.readLine());
-                break;
-            } catch (NumberFormatException e) {
-                count--;
-                if (count > 0)
-                    System.out.println("Ключ безопасности должен быть только числом от -2_147_483_648 до 2_147_483_647\n"+
-                            "Пожалуйста, введите число");
-                else System.out.println("Попробуйте в другой раз");
-            }
-        }
-
-        //Редактирование ключа безопасности в пределах Encryption.lengthAlphabet
-        if (keyInt >= 0) keyInt %= Encryption.lengthAlphabet;
-        else keyInt = Encryption.lengthAlphabet + keyInt % Encryption.lengthAlphabet;
+    public static void decryption(int keyInt) {
 
         //Чтение файла, преобразование в массив символов
-        String encryptedString;
+        String encryptedString=null;
         try {
             encryptedString = Files.readString(Path.of("encryptedFile.txt"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (IOException e ) {
+            System.out.println("Файл для расшифровки не найден, возможно нужно сначала зашифровать текст");
         }
-        char[] allChar = encryptedString.toCharArray();
+        char[] allChar = encryptedString != null ? encryptedString.toCharArray() : new char[0];
 
         //расшифровка текста
         for (int i = 0; i < allChar.length; i++) {
@@ -50,9 +30,9 @@ public class Decryption {
         Path file = Paths.get("decryptedFile.txt");
         try {
             Files.writeString(file, new String(allChar));
+            System.out.println("Файл \"decryptedFile.txt\" записан в папку \"CaesarEncryptionAndDecryption\"");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        System.out.println("Файл записан в папку \"CaesarEncryptionAndDecryption\"");
     }
 }

@@ -7,28 +7,8 @@ public class Encryption {
     public static String allSymbolsStr = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя.,”:-!? ";
     public static char[] allSymbolsChar = allSymbolsStr.toCharArray();
     static int lengthAlphabet = allSymbolsChar.length;
-    static boolean encryptionDone = false;
 
-    public static void encryption(String way) {
-        //Ввод ключа безопасности
-        System.out.println("Введите число - ключ безопасности");
-        int keyInt = 0;
-        int count = 3;
-        while (count > 0) {
-            try {
-                keyInt = Integer.parseInt(Actions.readLine());
-                break;
-            } catch (NumberFormatException e) {
-                count--;
-                if (count > 0)
-                    System.out.println("Ключ безопасности должен быть только числом от -2_147_483_648 до 2_147_483_647\n" +
-                            "Пожалуйста, введите число");
-                else System.out.println("Попробуйте в другой раз");
-            }
-        }
-        //Редактирование ключа безопасности в пределах lengthAlphabet
-        if (keyInt >= 0) keyInt %= lengthAlphabet;
-        else keyInt = lengthAlphabet + keyInt % lengthAlphabet;
+    public static void encryption(String way, int keyInt) {
 
         //Чтение файла, преобразование в массив символов
         String encryptedString;
@@ -58,6 +38,6 @@ public class Encryption {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        System.out.println("Файл записан в папку \"CaesarEncryptionAndDecryption\"");
+        System.out.println("Файл \"encryptedFile.txt\" записан в папку \"CaesarEncryptionAndDecryption\"");
     }
 }
