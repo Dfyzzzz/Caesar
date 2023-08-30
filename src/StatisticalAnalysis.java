@@ -4,7 +4,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 
 public class StatisticalAnalysis {
-    public static void StatisticalAnalysis(){
+    public static void analysis(){
         //Чтение файла 1
         String encryptedPart1;
         try {

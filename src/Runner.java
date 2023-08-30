@@ -51,7 +51,7 @@ public class Runner {
             //реализация шестого пункта меню(расшифровка статистическим анализом)
             else if (command.equals("6")) {
 
-                StatisticalAnalysis.StatisticalAnalysis();
+                StatisticalAnalysis.analysis();
                 break;
             }
 
