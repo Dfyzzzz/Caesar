@@ -17,24 +17,24 @@ public class Encryption {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        char[] allChar = encryptedString.toCharArray();
+        char[] allCharArr = encryptedString.toCharArray();
 
         //шифрование текста
-        for (int i = 0; i < allChar.length; i++) {
-            if (allSymbolsStr.contains(Character.toString(allChar[i]))) {
+        for (int i = 0; i < allCharArr.length; i++) {
+            if (allSymbolsStr.contains(Character.toString(allCharArr[i]))) {
 
-                int index = allSymbolsStr.indexOf(allChar[i]);
+                int index = allSymbolsStr.indexOf(allCharArr[i]);
 
                 if ((index + keyInt) >= lengthAlphabet) index -= lengthAlphabet;
 
-                allChar[i] = allSymbolsChar[index + keyInt];
+                allCharArr[i] = allSymbolsChar[index + keyInt];
             }
         }
 
         //Запись шифрованного текста в файл
         Path file = Paths.get("encryptedFile.txt");
         try {
-            Files.writeString(file, new String(allChar));
+            Files.writeString(file, new String(allCharArr));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

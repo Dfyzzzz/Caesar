@@ -6,18 +6,19 @@ import java.nio.file.Paths;
 public class BruteForce {
     public static int bruteForce(){
         //Чтение файла, преобразование в массив символов
-        String encryptedString = null;
+        String encryptedString;
         try {
             encryptedString = Files.readString(Path.of("encryptedFile.txt"));
         } catch (IOException e) {
             System.out.println("Файл для расшифровки не найден, возможно нужно сначала зашифровать текст");
+            return 0;
         }
 
         //Подбор ключа
         int key = 1;
         for (; key < Encryption.lengthAlphabet-1; key++) {
             int countSpaces = 0;
-            char [] allChar = encryptedString != null ? encryptedString.toCharArray() : new char[0];
+            char [] allChar = encryptedString.toCharArray();
 
             for (int i = 0; i <allChar.length; i++) {
                 if (Encryption.allSymbolsStr.contains(Character.toString(allChar[i]))){

@@ -7,13 +7,14 @@ public class Decryption {
     public static void decryption(int keyInt) {
 
         //Чтение файла, преобразование в массив символов
-        String encryptedString=null;
+        String encryptedString;
         try {
             encryptedString = Files.readString(Path.of("encryptedFile.txt"));
         } catch (IOException e ) {
             System.out.println("Файл для расшифровки не найден, возможно нужно сначала зашифровать текст");
+            return;
         }
-        char[] allChar = encryptedString != null ? encryptedString.toCharArray() : new char[0];
+        char[] allChar = encryptedString.toCharArray();
 
         //расшифровка текста
         for (int i = 0; i < allChar.length; i++) {
