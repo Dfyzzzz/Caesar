@@ -18,7 +18,9 @@ public class Actions {
             sb.append("\n");
         }
         //Если введенный текст не null обрезается лишний последний абзац
-        if(!sb.isEmpty()) sb.delete(sb.length()-1, sb.length());
+        if(!sb.isEmpty()){
+            sb.delete(sb.length()-1, sb.length());
+        }
 
         String way = "encryptedFile.txt";
         Path file = Paths.get(way);

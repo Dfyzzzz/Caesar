@@ -6,12 +6,12 @@ public class Runner {
             Вот МЕНЮ для использования программы:
             * Нажмите ENTER, чтобы зашифровать текст по умолчанию
             * Нажмите 2,чтобы ввести и зашифровать свой текст
-            * Нажмите 3,чтобы зашифровать текст "OneNineEightFourPart2.txt"
+            * Нажмите 3,чтобы зашифровать текст "OneNineEightFour.txt"
             ------------------------------------------------------------------------
             * Нажмите 4, чтобы расшифровать текст по ключу
             * Нажмите 5, чтобы расшифровать текст с помощью Brute Force
             * Нажмите 6, чтобы расшифровать текст с помощью статистического анализа
-              (рекомендуется перед этим зашифровать файл "OneNineEightFourPart2.txt" для этого нажмите 3)""");
+              (рекомендуется перед этим зашифровать файл "OneNineEightFour.txt" для этого нажмите 3)""");
         int attempt = 3;
         do {
             //считывание команды
@@ -19,7 +19,8 @@ public class Runner {
 
             //реализация первого пункта меню(шифрование текста по умолчанию)
             if (command.isEmpty()) {
-                Encryption.encryption("src/Text.txt", Actions.securityKeyEntry());
+                int keyInt = Actions.securityKeyEntry();
+                Encryption.encryption("src/Text.txt", keyInt );
                 break;
             }
 
@@ -30,9 +31,9 @@ public class Runner {
                 break;
             }
 
-            //реализация третьего пункта меню(шифрование "OneNineEightFourPart2.txt")
+            //реализация третьего пункта меню(шифрование "OneNineEightFour.txt")
             else if (command.equals("3")) {
-                Encryption.encryption("src/OneNineEightFourPart2.txt", Actions.securityKeyEntry());
+                Encryption.encryption("src/OneNineEightFour.txt", Actions.securityKeyEntry());
                 break;
             }
 
@@ -50,8 +51,7 @@ public class Runner {
 
             //реализация шестого пункта меню(расшифровка статистическим анализом)
             else if (command.equals("6")) {
-
-                StatisticalAnalysis.analysis();
+                Decryption.decryption(StatisticalAnalysis.analysis());
                 break;
             }
 
@@ -63,12 +63,12 @@ public class Runner {
                     Вот МЕНЮ для использования программы:
                     * Нажмите ENTER, чтобы зашифровать текст по умолчанию
                     * Нажмите 2,чтобы ввести и зашифровать свой текст
-                    * Нажмите 3,чтобы зашифровать текст "OneNineEightFourPart2.txt"
+                    * Нажмите 3,чтобы зашифровать текст "OneNineEightFour.txt"
                     ------------------------------------------------------------------------
                     * Нажмите 4, чтобы расшифровать текст по ключу
                     * Нажмите 5, чтобы расшифровать текст с помощью Brute Force
                     * Нажмите 6, чтобы расшифровать текст с помощью статистического анализа
-                      (рекомендуется перед этим зашифровать файл "OneNineEightFourPart2.txt" для этого нажмите 3)""");
+                      (рекомендуется перед этим зашифровать файл "OneNineEightFour.txt" для этого нажмите 3)""");
             }
             attempt--;
         }while (attempt>0);

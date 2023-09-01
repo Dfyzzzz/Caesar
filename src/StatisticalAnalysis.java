@@ -8,16 +8,20 @@ import java.util.Objects;
 public class StatisticalAnalysis {
     public static int analysis() {
         //Чтение незашифрованного файла
-        String oneNineEightFourStr;
+        String unencryptedStr;
         try {
-            oneNineEightFourStr = Files.readString(Path.of("src/OneNineEightFour.txt"));
+            unencryptedStr = Files.readString(Path.of("unencryptedFile.txt"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        if(unencryptedStr.length() <= Encryption.lengthAlphabet) {
+            System.out.println("Текст слишком короткий для статистического анализа");
+            return 0;
+        }
         //подсчет количества каждого char в незашифрованном тексте
         HashMap<Character, Integer> charCountMap = new HashMap<>();
-        for (int i = 0; i < oneNineEightFourStr.length(); i++) {
-            char c = oneNineEightFourStr.charAt(i);
+        for (int i = 0; i < unencryptedStr.length(); i++) {
+            char c = unencryptedStr.charAt(i);
             if (Encryption.allSymbolsStr.contains(String.valueOf(c))) {
                 if (charCountMap.containsKey(c)) charCountMap.put(c, charCountMap.get(c) + 1);
                 else charCountMap.put(c, 1);
@@ -51,7 +55,8 @@ public class StatisticalAnalysis {
         int[] keyArr = new int[3];
         int keyInt = 0;
 
-        for (int i = 0; i < 3; i++) {
+        System.out.println("Наиболее часто встречающиеся символы:");
+        for (int i = 0; i < keyArr.length; i++) {
 
             for (var entry : charCountMap.entrySet()) {
                 maxValue = (Collections.max(charCountMap.values()));
@@ -61,6 +66,8 @@ public class StatisticalAnalysis {
                     break;
                 }
             }
+            System.out.printf(" в незашифрованном тексте \"%c\" в количестве %d ---", maxChar, maxValue);
+
 
             for (var entry2 : encryptedCharCountMap.entrySet()) {
                 maxValue2 = (Collections.max(encryptedCharCountMap.values()));
@@ -70,9 +77,15 @@ public class StatisticalAnalysis {
                     break;
                 }
             }
+            System.out.printf("в зашифрованном тексте \"%c\" в количестве %d\n", maxChar2, maxValue2);
 
-            if (Objects.equals(maxValue, maxValue2) && maxChar != null && maxChar2 != null) {
-                keyArr[i] = Encryption.allSymbolsStr.indexOf(maxChar) - Encryption.allSymbolsStr.indexOf(maxChar2);
+            if (Objects.equals(maxValue, maxValue2)) {
+                int index1 = Encryption.allSymbolsStr.indexOf(maxChar);
+                int index2 = Encryption.allSymbolsStr.indexOf(maxChar2);
+
+                if(index1 > index2) index1 -= Encryption.lengthAlphabet;
+
+                keyArr[i] = Math.abs(index1 - index2);
             }
         }
 

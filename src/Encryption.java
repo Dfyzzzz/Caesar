@@ -11,13 +11,15 @@ public class Encryption {
     public static void encryption(String way, int keyInt) {
 
         //Чтение файла, преобразование в массив символов
-        String encryptedString;
+        String unencryptedString;
+        Path unencryptedFile = Paths.get("unencryptedFile.txt");
         try {
-            encryptedString = Files.readString(Path.of(way));
+            unencryptedString = Files.readString(Path.of(way));
+            Files.writeString(unencryptedFile, unencryptedString);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        char[] allCharArr = encryptedString.toCharArray();
+        char[] allCharArr = unencryptedString.toCharArray();
 
         //шифрование текста
         for (int i = 0; i < allCharArr.length; i++) {

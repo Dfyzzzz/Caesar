@@ -16,7 +16,7 @@ public class BruteForce {
 
         //Подбор ключа
         int key = 1;
-        for (; key < Encryption.lengthAlphabet-1; key++) {
+        for (; key < Encryption.lengthAlphabet; key++) {
             int countSpaces = 0;
             char [] allChar = encryptedString.toCharArray();
 
