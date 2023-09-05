@@ -1,45 +1,29 @@
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 public class Encryption {
-    public static String allSymbolsStr = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя.,”:-!? ";
-    public static char[] allSymbolsChar = allSymbolsStr.toCharArray();
-    static int lengthAlphabet = allSymbolsChar.length;
+    public static void encryption(String filePath, int keyInt) {
+        String unencryptedText = Actions.readText(filePath);
 
-    public static void encryption(String way, int keyInt) {
+        Actions.writeText(unencryptedText, Constants.unencryptedFile);
 
-        //Чтение файла, преобразование в массив символов
-        String unencryptedString;
-        Path unencryptedFile = Paths.get("unencryptedFile.txt");
-        try {
-            unencryptedString = Files.readString(Path.of(way));
-            Files.writeString(unencryptedFile, unencryptedString);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        char[] allCharArr = unencryptedString.toCharArray();
+        String encryptedText = encryption(keyInt, unencryptedText);
 
-        //шифрование текста
-        for (int i = 0; i < allCharArr.length; i++) {
-            if (allSymbolsStr.contains(Character.toString(allCharArr[i]))) {
+        Actions.writeText(encryptedText, Constants.encryptedFile);
+    }
 
-                int index = allSymbolsStr.indexOf(allCharArr[i]);
+    private static String encryption(int keyInt, String unencryptedText) {
+        char[] allTextCharArr = unencryptedText.toCharArray();
 
-                if ((index + keyInt) >= lengthAlphabet) index -= lengthAlphabet;
+        for (int i = 0; i < allTextCharArr.length; i++) {
+            if (Constants.allSymbolsStr.contains(Character.toString(allTextCharArr[i]))) {
+                int index = Constants.allSymbolsStr.indexOf(allTextCharArr[i]);
 
-                allCharArr[i] = allSymbolsChar[index + keyInt];
+                if ((index + keyInt) >= Constants.lengthAlphabet){
+                    index -= Constants.lengthAlphabet;
+                }
+
+                allTextCharArr[i] = Constants.allSymbolsChar[index + keyInt];
             }
         }
 
-        //Запись шифрованного текста в файл
-        Path file = Paths.get("encryptedFile.txt");
-        try {
-            Files.writeString(file, new String(allCharArr));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        System.out.println("Файл \"encryptedFile.txt\" записан в папку \"CaesarEncryptionAndDecryption\"");
+        return new String(allTextCharArr);
     }
 }

@@ -10,11 +10,11 @@ public class StatisticalAnalysis {
         //Чтение незашифрованного файла
         String unencryptedStr;
         try {
-            unencryptedStr = Files.readString(Path.of("unencryptedFile.txt"));
+            unencryptedStr = Files.readString(Path.of(Constants.unencryptedFile));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        if(unencryptedStr.length() <= Encryption.lengthAlphabet) {
+        if(unencryptedStr.length() <= Constants.lengthAlphabet) {
             System.out.println("Текст слишком короткий для статистического анализа");
             return 0;
         }
@@ -22,7 +22,7 @@ public class StatisticalAnalysis {
         HashMap<Character, Integer> charCountMap = new HashMap<>();
         for (int i = 0; i < unencryptedStr.length(); i++) {
             char c = unencryptedStr.charAt(i);
-            if (Encryption.allSymbolsStr.contains(String.valueOf(c))) {
+            if (Constants.allSymbolsStr.contains(String.valueOf(c))) {
                 if (charCountMap.containsKey(c)) charCountMap.put(c, charCountMap.get(c) + 1);
                 else charCountMap.put(c, 1);
             }
@@ -31,7 +31,7 @@ public class StatisticalAnalysis {
         //Чтение зашифрованного файла
         String encryptedFile;
         try {
-            encryptedFile = Files.readString(Path.of("encryptedFile.txt"));
+            encryptedFile = Files.readString(Path.of(Constants.encryptedFile));
         } catch (IOException e) {
             System.out.println("Файл для расшифровки не найден, возможно нужно сначала зашифровать текст");
             return 0;
@@ -42,7 +42,7 @@ public class StatisticalAnalysis {
         for (int i = 0; i < encryptedFile.length(); i++) {
             char c = encryptedFile.charAt(i);
 
-            if (Encryption.allSymbolsStr.contains(String.valueOf(c))) {
+            if (Constants.allSymbolsStr.contains(String.valueOf(c))) {
                 if (encryptedCharCountMap.containsKey(c))
                     encryptedCharCountMap.put(c, encryptedCharCountMap.get(c) + 1);
                 else encryptedCharCountMap.put(c, 1);
@@ -80,10 +80,10 @@ public class StatisticalAnalysis {
             System.out.printf("в зашифрованном тексте \"%c\" в количестве %d\n", maxChar2, maxValue2);
 
             if (Objects.equals(maxValue, maxValue2)) {
-                int index1 = Encryption.allSymbolsStr.indexOf(maxChar);
-                int index2 = Encryption.allSymbolsStr.indexOf(maxChar2);
+                int index1 = Constants.allSymbolsStr.indexOf(maxChar);
+                int index2 = Constants.allSymbolsStr.indexOf(maxChar2);
 
-                if(index1 > index2) index1 -= Encryption.lengthAlphabet;
+                if(index1 > index2) index1 -= Constants.lengthAlphabet;
 
                 keyArr[i] = Math.abs(index1 - index2);
             }

@@ -1,39 +1,27 @@
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 public class Decryption {
     public static void decryption(int keyInt) {
+        String encryptedString = Actions.readText(Constants.encryptedFile);
 
-        //Чтение файла, преобразование в массив символов
-        String encryptedString;
-        try {
-            encryptedString = Files.readString(Path.of("encryptedFile.txt"));
-        } catch (IOException e ) {
-            System.out.println("Файл для расшифровки не найден, возможно нужно сначала зашифровать текст");
-            return;
-        }
-        char[] allChar = encryptedString.toCharArray();
+        String decryptedText = decryption(keyInt, encryptedString);
 
-        //расшифровка текста
-        for (int i = 0; i < allChar.length; i++) {
-            if (Encryption.allSymbolsStr.contains(Character.toString(allChar[i]))) {
+        Actions.writeText(decryptedText, Constants.decryptedFile);
+    }
 
-                int index = Encryption.allSymbolsStr.indexOf(allChar[i]);
+    public static String decryption(int keyInt, String encryptedString) {
+        char[] allTextCharArr = encryptedString.toCharArray();
 
-                if ((index - keyInt) < 0) index += Encryption.lengthAlphabet;
-                allChar[i] = Encryption.allSymbolsChar[index - keyInt];
+        for (int i = 0; i < allTextCharArr.length; i++) {
+            if (Constants.allSymbolsStr.contains(Character.toString(allTextCharArr[i]))) {
+                int index = Constants.allSymbolsStr.indexOf(allTextCharArr[i]);
+
+                if ((index - keyInt) < 0) {
+                    index += Constants.lengthAlphabet;
+                }
+
+                allTextCharArr[i] = Constants.allSymbolsChar[index - keyInt];
             }
         }
 
-        //Запись расшифрованного текста в файл
-        Path file = Paths.get("decryptedFile.txt");
-        try {
-            Files.writeString(file, new String(allChar));
-            System.out.println("Файл \"decryptedFile.txt\" записан в папку \"CaesarEncryptionAndDecryption\"");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return new String(allTextCharArr);
     }
 }

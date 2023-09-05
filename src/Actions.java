@@ -9,28 +9,27 @@ public class Actions {
         Scanner sc = new Scanner(System.in);
         return sc.nextLine();
     }
-    public static String readText(){
-        Scanner sc = new Scanner(System.in);
+
+    public static String userTextEntry(){
         StringBuilder sb = new StringBuilder();
         String line;
-        while (!(line = sc.nextLine()).equals("end")) {
-            sb.append(line);
-            sb.append("\n");
+        while (!(line = Actions.readLine()).equals(Constants.wordToEndTextInput)) {
+            sb.append(line).append("\n");
         }
         //Если введенный текст не null обрезается лишний последний абзац
         if(!sb.isEmpty()){
             sb.delete(sb.length()-1, sb.length());
         }
 
-        String way = "encryptedFile.txt";
-        Path file = Paths.get(way);
+        Path file = Paths.get(Constants.encryptedFile);
         try {
             Files.writeString(file, sb.toString());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return way;
+        return Constants.encryptedFile;
     }
+
     public static int securityKeyEntry(){
         //Ввод ключа безопасности
         System.out.println("Введите число - ключ безопасности");
@@ -49,9 +48,36 @@ public class Actions {
             }
         }
         //Редактирование ключа безопасности в пределах lengthAlphabet
-        if (keyInt >= 0) keyInt %= Encryption.lengthAlphabet;
-        else keyInt = Encryption.lengthAlphabet + keyInt % Encryption.lengthAlphabet;
+        if (keyInt >= 0) keyInt %= Constants.lengthAlphabet;
+        else keyInt = Constants.lengthAlphabet + keyInt % Constants.lengthAlphabet;
 
         return keyInt;
     }
+
+    public static String readText(String filePath){
+        String unencryptedString;
+        Path unencryptedFile = Paths.get(Constants.unencryptedFile);
+        try {
+            unencryptedString = Files.readString(Path.of(filePath));
+            Files.writeString(unencryptedFile, unencryptedString);
+        } catch (IOException e) {
+            //System.out.println("Файл для расшифровки не найден, возможно нужно сначала зашифровать текст");
+            throw new RuntimeException(e);
+        }
+        return unencryptedString;
+    }
+
+    public static void writeText(String text, String filePath){
+        Path file = Paths.get(filePath);
+        try {
+            Files.writeString(file, text);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println("Файл \""+filePath+"\" записан в папку \"Caesar\"");
+    }
+
+
+
+
 }
