@@ -1,8 +1,3 @@
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 public class BruteForce {
     private static final double averageWordLength = 7.2;
     public static int bruteForce(){
