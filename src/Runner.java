@@ -5,7 +5,7 @@ public class Runner {
         switch (Actions.readLine()) {
             case "1" -> Encryption.encryption(Constants.defaultText, Actions.securityKeyEntry());
             case "2" -> {
-                System.out.println("Введите свой текст. По завершении введите " + Constants.wordToEndTextInput + " , чтобы зашифровать текст");
+                System.out.println("Введите свой текст. По завершении введите \"" + Constants.wordToEndTextInput + "\" , чтобы зашифровать текст");
                 Encryption.encryption(Actions.userTextEntry(), Actions.securityKeyEntry());
             }
             case "3" -> Encryption.encryption(Constants.longText, Actions.securityKeyEntry());

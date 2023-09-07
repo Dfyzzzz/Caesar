@@ -1,92 +1,25 @@
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Objects;
 
 public class StatisticalAnalysis {
     public static int analysis() {
-        //Чтение незашифрованного файла
-        String unencryptedStr;
-        try {
-            unencryptedStr = Files.readString(Path.of(Constants.unencryptedFile));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        if(unencryptedStr.length() <= Constants.lengthAlphabet) {
-            System.out.println("Текст слишком короткий для статистического анализа");
-            return 0;
-        }
-        //подсчет количества каждого char в незашифрованном тексте
-        HashMap<Character, Integer> charCountMap = new HashMap<>();
-        for (int i = 0; i < unencryptedStr.length(); i++) {
-            char c = unencryptedStr.charAt(i);
-            if (Constants.allSymbolsStr.contains(String.valueOf(c))) {
-                if (charCountMap.containsKey(c)) charCountMap.put(c, charCountMap.get(c) + 1);
-                else charCountMap.put(c, 1);
-            }
-        }
+        String unencryptedText = Actions.readText(Constants.unencryptedFile);
+        String encryptedText = Actions.readText(Constants.encryptedFile);
 
-        //Чтение зашифрованного файла
-        String encryptedFile;
-        try {
-            encryptedFile = Files.readString(Path.of(Constants.encryptedFile));
-        } catch (IOException e) {
-            System.out.println("Файл для расшифровки не найден, возможно нужно сначала зашифровать текст");
-            return 0;
-        }
-        //подсчет количества каждого char в зашифрованном тексте
-        HashMap<Character, Integer> encryptedCharCountMap = new HashMap<>();
+        HashMap<Character, Integer> unencryptedCharCountMap = charCounterMap(unencryptedText);
+        HashMap<Character, Integer> encryptedCharCountMap = charCounterMap(encryptedText);
 
-        for (int i = 0; i < encryptedFile.length(); i++) {
-            char c = encryptedFile.charAt(i);
-
-            if (Constants.allSymbolsStr.contains(String.valueOf(c))) {
-                if (encryptedCharCountMap.containsKey(c))
-                    encryptedCharCountMap.put(c, encryptedCharCountMap.get(c) + 1);
-                else encryptedCharCountMap.put(c, 1);
-            }
-        }
-
-        //статистический анализ, поиск ключа
-        Character maxChar = null, maxChar2 = null;
-        Integer maxValue = null, maxValue2 = null;
         int[] keyArr = new int[3];
         int keyInt = 0;
 
-        System.out.println("Наиболее часто встречающиеся символы:");
+        System.out.println("Наиболее часто встречающиеся символы в незашифрованном и зашифрованном тексте:");
         for (int i = 0; i < keyArr.length; i++) {
+            ArrayList<Object> mostPopularUnencryptedSymbolAndHisValue = searchSymbolAndHisValue(unencryptedCharCountMap);
+            ArrayList<Object> mostPopularEncryptedSymbolAndHisValue = searchSymbolAndHisValue(encryptedCharCountMap);
 
-            for (var entry : charCountMap.entrySet()) {
-                maxValue = (Collections.max(charCountMap.values()));
-                if (entry.getValue().equals(maxValue)) {
-                    maxChar = entry.getKey();
-                    charCountMap.remove(maxChar);
-                    break;
-                }
-            }
-            System.out.printf(" в незашифрованном тексте \"%c\" в количестве %d ---", maxChar, maxValue);
-
-
-            for (var entry2 : encryptedCharCountMap.entrySet()) {
-                maxValue2 = (Collections.max(encryptedCharCountMap.values()));
-                if (entry2.getValue().equals(maxValue2)) {
-                    maxChar2 = entry2.getKey();
-                    encryptedCharCountMap.remove(maxChar2);
-                    break;
-                }
-            }
-            System.out.printf("в зашифрованном тексте \"%c\" в количестве %d\n", maxChar2, maxValue2);
-
-            if (Objects.equals(maxValue, maxValue2)) {
-                int index1 = Constants.allSymbolsStr.indexOf(maxChar);
-                int index2 = Constants.allSymbolsStr.indexOf(maxChar2);
-
-                if(index1 > index2) index1 -= Constants.lengthAlphabet;
-
-                keyArr[i] = Math.abs(index1 - index2);
-            }
+            keyArr[i] = searchKeyByIndexDifference (mostPopularUnencryptedSymbolAndHisValue, mostPopularEncryptedSymbolAndHisValue);
         }
 
         if (keyArr[0] == keyArr[1] && keyArr[1] == keyArr[2]) {
@@ -95,5 +28,59 @@ public class StatisticalAnalysis {
         }
 
         return keyInt;
+    }
+
+    private static int searchKeyByIndexDifference(ArrayList<Object> unencryptedSymbolAndHisValue, ArrayList<Object> encryptedSymbolAndHisValue){
+        int firstIndex = 0;
+        int secondIndex = 0;
+
+        if (Objects.equals(unencryptedSymbolAndHisValue.get(1), encryptedSymbolAndHisValue.get(1))) {
+            firstIndex = Constants.allSymbolsStr.indexOf((char)unencryptedSymbolAndHisValue.get(0));
+            secondIndex = Constants.allSymbolsStr.indexOf((char)encryptedSymbolAndHisValue.get(0));
+
+            if (firstIndex > secondIndex) {
+                firstIndex -= Constants.lengthAlphabet;
+            }
+        }
+
+        return Math.abs(firstIndex - secondIndex);
+    }
+
+    private static ArrayList<Object> searchSymbolAndHisValue(HashMap <Character, Integer> charCountMap){
+        ArrayList<Object> symbolAndHisValue = new ArrayList<>();
+
+        for (var entry : charCountMap.entrySet()) {
+            Integer maxValue = (Collections.max(charCountMap.values()));
+
+            if (entry.getValue().equals(maxValue)) {
+                Character mostPopularSymbol = entry.getKey();
+                charCountMap.remove(mostPopularSymbol);
+
+                System.out.printf("\"%c\" в количестве %d\n", mostPopularSymbol, maxValue);
+
+                symbolAndHisValue.add(mostPopularSymbol);
+                symbolAndHisValue.add(maxValue);
+                break;
+            }
+        }
+
+        return symbolAndHisValue;
+    }
+
+    private static HashMap<Character, Integer> charCounterMap(String text){
+        HashMap<Character, Integer> charCounterMap = new HashMap<>();
+
+        for (int i = 0; i < text.length(); i++) {
+            char c = text.charAt(i);
+
+            if (Constants.allSymbolsStr.contains(String.valueOf(c))){
+                if(charCounterMap.containsKey(c)) {
+                    charCounterMap.put(c, charCounterMap.get(c) + 1);
+                }
+                else charCounterMap.put(c, 1);
+            }
+        }
+
+        return charCounterMap;
     }
 }

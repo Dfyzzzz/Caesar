@@ -20,6 +20,4 @@ public class Constants {
     public static final String defaultText = "src/Text.txt";
     public static final String longText = "src/OneNineEightFour.txt";
     public static String wordToEndTextInput = "end";
-
-
 }
