@@ -5,13 +5,13 @@ import java.nio.file.Paths;
 import java.util.Scanner;
 
 public class Actions {
-    public static String readLine(){
+    public static String readLine() {
         Scanner sc = new Scanner(System.in);
 
         return sc.nextLine();
     }
 
-    public static String userTextEntry(){
+    public static String userTextEntry() {
         StringBuilder sb = new StringBuilder();
         String line;
 
@@ -20,8 +20,8 @@ public class Actions {
         }
 
         //Если введенный текст не null обрезается лишний последний абзац
-        if(!sb.isEmpty()){
-            sb.delete(sb.length()-1, sb.length());
+        if (!sb.isEmpty()) {
+            sb.delete(sb.length() - 1, sb.length());
         }
 
         writeText(sb.toString(), Constants.unencryptedFile);
@@ -29,42 +29,43 @@ public class Actions {
         return Constants.unencryptedFile;
     }
 
-    public static int securityKeyEntry(){
+    public static int securityKeyEntry() {
         System.out.println("Введите число - ключ безопасности");
         int keyInt = Integer.parseInt(Actions.readLine());
 
         //Редактирование ключа безопасности в пределах lengthAlphabet
         if (keyInt >= 0) {
             keyInt %= Constants.lengthAlphabet;
-        }
-        else {
+        } else {
             keyInt = Constants.lengthAlphabet + keyInt % Constants.lengthAlphabet;
         }
 
         return keyInt;
     }
 
-    public static String readText(String filePath){
+    public static String readText(String filePath) {
         String text;
 
         try {
             text = Files.readString(Path.of(filePath));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+
+            return "failure: IOException";
         }
 
         return text;
     }
 
-    public static void writeText(String text, String filePath){
+    public static void writeText(String text, String filePath) {
         Path file = Paths.get(filePath);
 
         try {
             Files.writeString(file, text);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
 
-        System.out.println("Файл \""+filePath+"\" записан в папку \"Caesar\"");
+        System.out.println("Файл \"" + filePath + "\" записан в папку \"Caesar\"");
     }
 }
